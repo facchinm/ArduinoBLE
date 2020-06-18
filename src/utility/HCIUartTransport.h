@@ -22,14 +22,6 @@
 
 #include "HCITransport.h"
 
-#if defined(__has_include) &&  __has_include("WiFININA.h")
-    #define COEXISTENCE 1
-    #undef NINA_RTS
-    #undef NINA_CTS
-    #define NINA_RTS                    NINA_ACK
-    #define NINA_CTS                    NINA_GPIO0
-#endif
-
 class HCIUartTransportClass : public HCITransportInterface {
 public:
   HCIUartTransportClass(HardwareSerial& uart, unsigned long baudrate);

@@ -49,17 +49,16 @@ int BLELocalDevice::begin()
   digitalWrite(SPIWIFI_SS, LOW);
 #endif
 
-#if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2)
-  digitalWrite(NINA_RESETN, HIGH);
+#if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_SAMD_NANO_33_IOT)
+  #ifndef COEXISTENCE //WiFi has already started the module
+  digitalWrite(NINA_RESETN, SPIWIFI_RESET == NINA_RESETN ? HIGH : LOW);
   delay(100);
-  digitalWrite(NINA_RESETN, LOW);
+  digitalWrite(NINA_RESETN, SPIWIFI_RESET == NINA_RESETN ? LOW : HIGH);
+  delay(5);
+  pinMode(NINA_GPIO0, OUTPUT);
+  digitalWrite(NINA_GPIO0, LOW);
   delay(750);
-#elif defined(ARDUINO_SAMD_NANO_33_IOT)
-  // inverted reset
-  digitalWrite(NINA_RESETN, LOW);
-  delay(100);
-  digitalWrite(NINA_RESETN, HIGH);
-  delay(750);
+  #endif
 #elif defined(ARDUINO_PORTENTA_H7_M4) || defined(ARDUINO_PORTENTA_H7_M7)
   // BT_REG_ON -> HIGH
   pinMode(BT_REG_ON, OUTPUT);
