@@ -33,6 +33,10 @@
 
 #include "utility/HCITransport.h"
 
+#ifdef COEXISTENCE
+#include <WiFiNINABLE.h>
+#endif
+
 BLELocalDevice::BLELocalDevice()
 {
 }
@@ -62,6 +66,8 @@ int BLELocalDevice::begin()
   pinMode(NINA_GPIO0, OUTPUT);
   digitalWrite(NINA_GPIO0, LOW);
   delay(750);
+  #else
+  WiFiNINABLE::begin();
   #endif
 #elif defined(ARDUINO_PORTENTA_H7_M4) || defined(ARDUINO_PORTENTA_H7_M7)
   // BT_REG_ON -> HIGH
