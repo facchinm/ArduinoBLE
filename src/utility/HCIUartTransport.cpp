@@ -21,6 +21,14 @@
 
 #include "HCIUartTransport.h"
 
+#if defined(__has_include) &&  __has_include("WiFiNINA.h")
+    #define COEXISTENCE 1
+    #undef NINA_RTS
+    #undef NINA_CTS
+    #define NINA_RTS                    NINA_ACK
+    #define NINA_CTS                    NINA_GPIO0
+#endif
+
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2)
 #ifndef COEXISTENCE
 #define SerialHCI Serial2
@@ -28,6 +36,10 @@
 #define SerialHCI SerialNina
 #endif
 #elif defined(ARDUINO_SAMD_NANO_33_IOT)
+#ifdef COEXISTENCE
+#undef SerialHCI
+#define SerialHCI Serial2
+#endif
 // SerialHCI is already defined in the variant
 #elif defined(ARDUINO_PORTENTA_H7_M4)
 // SerialHCI is already defined in the variant

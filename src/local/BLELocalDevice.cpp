@@ -31,6 +31,8 @@
 #endif
 #endif
 
+#include "utility/HCITransport.h"
+
 BLELocalDevice::BLELocalDevice()
 {
 }
@@ -45,8 +47,10 @@ int BLELocalDevice::begin()
   // reset the NINA in BLE mode
   pinMode(SPIWIFI_SS, OUTPUT);
   pinMode(NINA_RESETN, OUTPUT);
-  
+
+#ifndef COEXISTENCE
   digitalWrite(SPIWIFI_SS, LOW);
+#endif
 #endif
 
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_SAMD_NANO_33_IOT)
