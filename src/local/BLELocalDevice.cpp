@@ -59,9 +59,9 @@ int BLELocalDevice::begin()
 
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_SAMD_NANO_33_IOT)
   #ifndef COEXISTENCE //WiFi has already started the module
-  digitalWrite(NINA_RESETN, SPIWIFI_RESET == NINA_RESETN ? HIGH : LOW);
-  delay(100);
   digitalWrite(NINA_RESETN, SPIWIFI_RESET == NINA_RESETN ? LOW : HIGH);
+  delay(100);
+  digitalWrite(NINA_RESETN, SPIWIFI_RESET == NINA_RESETN ? HIGH : LOW);
   delay(5);
   pinMode(NINA_GPIO0, OUTPUT);
   digitalWrite(NINA_GPIO0, LOW);
