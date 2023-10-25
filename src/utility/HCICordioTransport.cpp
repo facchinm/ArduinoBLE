@@ -48,17 +48,23 @@
 #include "HCICordioTransport.h"
 
 #if (MBED_VERSION > MBED_ENCODE_VERSION(6, 2, 0))
-#define BLE_NAMESPACE ble 
+#define BLE_NAMESPACE ble
 #else
 #define BLE_NAMESPACE ble::vendor::cordio
 #endif
+
+#include "CordioHCICustomDriver.h"
 
 extern BLE_NAMESPACE::CordioHCIDriver& ble_cordio_get_hci_driver();
 
 namespace BLE_NAMESPACE {
   struct CordioHCIHook {
     static CordioHCIDriver& getDriver() {
+      #ifdef CUSTOM_HCI_DRIVER
+      return ble_cordio_get_custom_hci_driver();
+      #else
       return ble_cordio_get_hci_driver();
+      #endif
     }
 
     static CordioHCITransportDriver& getTransportDriver() {
@@ -201,8 +207,13 @@ int HCICordioTransportClass::begin()
   init_wsf(bufPoolDesc);
 #endif
 
-#if defined(ARDUINO_PORTENTA_H7_M4) || defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_NICLA_VISION) || defined(ARDUINO_GIGA) || defined(ARDUINO_OPTA)
+#if (defined(ARDUINO_PORTENTA_H7_M4) || defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_NICLA_VISION) || defined(ARDUINO_GIGA) || defined(ARDUINO_OPTA)) && !defined(CUSTOM_HCI_DRIVER)
+
+  #ifdef CUSTOM_HCI_DRIVER
+  BLE &ble = CustomInstance();
+  #else
   BLE &ble = BLE::Instance();
+  #endif
   ble.onEventsToProcess(scheduleMbedBleEvents);
 
   ble.init(completeCallback);
