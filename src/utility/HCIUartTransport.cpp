@@ -17,7 +17,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) && !defined(ARDUINO_UNOR4_WIFI) || defined(TARGET_NANO_RP2040_CONNECT)
+#if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) && !defined(ARDUINO_UNOR4_WIFI) || defined(TARGET_NANO_RP2040_CONNECT) || defined(CORE_CM4)
 
 #include "HCIUartTransport.h"
 
@@ -33,6 +33,8 @@
 #define SerialHCI Serial3
 #elif defined(ARDUINO_PORTENTA_C33)
 #define SerialHCI Serial5
+#elif defined(ARDUINO_GIGA)
+arduino::UART SerialHCI(CYBSP_BT_UART_TX, CYBSP_BT_UART_RX, CYBSP_BT_UART_RTS, CYBSP_BT_UART_CTS);
 #else
 #error "Unsupported board selected!"
 #endif
@@ -97,7 +99,7 @@ size_t HCIUartTransportClass::write(const uint8_t* data, size_t length)
   return result;
 }
 
-#if defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_NANO_RP2040_CONNECT)
+#if defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_NANO_RP2040_CONNECT) || defined(ARDUINO_GIGA)
 HCIUartTransportClass HCIUartTransport(SerialHCI, 119600);
 #else
 HCIUartTransportClass HCIUartTransport(SerialHCI, 912600);
