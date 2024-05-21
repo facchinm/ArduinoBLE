@@ -75,5 +75,4 @@ enum BLE_GATT_PERM_ {
   WRITE_AUTHORIZATION = 1 << 10,
 };
 
-
 #endif
